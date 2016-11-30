@@ -9,8 +9,116 @@
   		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</head>
 	<body>
-	<div class="container">
-		<p>Sup fam.</p>
-	</div>
+		<div class="container">
+			<!-- First Name, Last Name, Email -->
+			<form>
+				<div class="form-group">
+					<label for="first">First Name:</label>
+					<input type="text" class="form-control" id="first">
+				</div>
+				<div class="form-group">
+					<label for="last">Last Name:</label>
+					<input type="text" class="form-control" id="last">
+				</div>
+				<div class="form-group">
+					<label for="email">Email:</label>
+					<input type="text" class="form-control" id="email">
+				</div>
+				<div class="form-group">
+					<label for="company">Company:</label>
+					<input type="text" class="form-control" id="comapny">
+				</div>
+			</form>
+
+			<!-- # of employees dropdown -->
+			<div class="dropdown">
+				<p> <b> Number of employees:</b></p>
+				<button class="btn btn-primary dropdown-toggle" type="button" id="num" data-toggle="dropdown">
+				Select one...
+				<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Less than 1,000</a></li>
+					<li><a href="#">1,000 - 4,999</a></li>
+					<li><a href="#">5,000 - 9,999</a></li>
+					<li><a href="#">10,000 - 14,999</a></li>
+					<li><a href="#">15,000+</a></li>
+				</ul>
+			</div>
+
+			<p></p>
+			<!-- Industry list -->
+			<div class="form-group">
+				<label for="industry">Industry (hold shift to select more than one):</label>
+				<select multiple class="form-control" id="industry">
+					<option>Accommodations</option>
+					<option>Accounting</option>
+					<option>Advertising</option>
+					<option>Aerospace</option>
+					<option>Agriculture & Agribusiness</option>
+					<option>Air Transportation</option>
+					<option>Apparel & Accessories</option>
+					<option>Auto</option>
+					<option>Banking</option>
+					<option>Beauty & Cosmetics</option>
+					<option>Biotechnology</option>
+					<option>Chemical</option>
+					<option>Communications</option>
+					<option>Computer</option>
+					<option>Consulting</option>
+					<option>Consumer Products</option>
+					<option>Education</option>
+					<option>Electronics</option>
+					<option>Employment</option>
+					<option>Energy</option>
+					<option>Entertainment</option>
+					<option>Fashion</option>
+					<option>Financial Services</option>
+					<option>Fine Arts</option>
+					<option>Food & Beverage</option>
+					<option>Health</option>
+					<option>Information</option>
+					<option>Information Technology</option>
+					<option>Insurance</option>
+					<option>Journalism & News</option>
+					<option>Legal Services</option>
+					<option>Manufacturing</option>
+					<option>Media & Broadcasting</option>
+					<option>Medical Devices & Supplies</option>
+					<option>Motion Pictures & Video</option>
+					<option>Music</option>
+					<option>Pharmaceutical</option>
+					<option>Public Administration</option>
+					<option>Publishing</option>
+					<option>Real Estate</option>
+					<option>Retail</option>
+					<option>Service</option>
+					<option>Sports</option>
+					<option>Technology</option>
+					<option>Telecommunications</option>
+					<option>Tourism</option>
+					<option>Transportation</option>
+					<option>Travel</option>
+					<option>Utilities</option>
+					<option>Video Game</option>
+					<option>Web Services</option>
+				</select>
+			</div>
+
+			<!-- Major Textbox -->
+			<form>
+				<div class="form-group">
+					<label for="major">Desired Majors (seperate by comma):</label>
+					<input type="text" class="form-control" id="major">
+				</div>
+			</form>
+
+			<!-- Find a candidate button -->
+			<button type="button" class="btn btn-lg btn-success">
+      			<span class="glyphicon glyphicon-search"></span> 
+      			Find job candidates!
+    		</button>
+
+		</div>
 	</body>
 </html>
