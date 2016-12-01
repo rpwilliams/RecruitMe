@@ -1,9 +1,30 @@
 from flask import Flask, render_template
+from flaskext.mysql import MySQL
+
 app = Flask(__name__)
+mysql = MySQL()
+
+app.config['MYSQL_DATABASE_USER'] = 'mhixon'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'cis560'
+app.config['MYSQL_DATABASE_DB'] = 'mhixon'
+app.config['MYSQL_DATABASE_HOST'] = 'mysql.cis.ksu.edu'
+mysql.init_app(app)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	cursor.execute("SELECT * FROM month_discount")
+	#data = cursor.fetchone()
+	return render_template('index.html')
+	
+@app.route('/login')
+def login():
+    return render_template('/login.html')
+
+@app.route('/sign-up')
+def signUp():
+    return render_template('/signUp.html')
 
 @app.route('/recruiter')
 def recruiter():

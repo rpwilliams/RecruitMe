@@ -7,15 +7,6 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  		<style>
-  			.btn-xl {
-  				font-size:50px;
-  				padding:75px;
-			    width: 450px;
-			    height: 250px;
-			    border-radius: 24px;
-			}
-  		</style>
 	</head>
 	<body>
 	<div class="container">
@@ -23,8 +14,9 @@
 			<h1>RecruitMe</h1>
 			<p>Connecting K-State students to their dream jobs since 2016&#174</p>
 		</div>
-		<a href="{{ url_for('signUp') }}" type="button" class="btn pull-leftt btn-primary btn-xl ">SIGN UP</a>
-		<a href="{{ url_for('login') }}" type="button" class="btn pull-right btn-success btn-xl">LOGIN</a>
+		<h2><small>I am a...</small></h2>
+		<a href="{{ url_for('student') }}" type="button" class="btn btn-primary btn-lg btn-block">Student</as>
+		<a href="{{ url_for('recruiter') }}" type="button" class="btn btn-success btn-lg btn-block">Recruiter</a>
 	</div>
 	</body>
 </html>
