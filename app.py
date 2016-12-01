@@ -22,6 +22,10 @@ def index():
 def login():
     return render_template('/login.html')
 
+@app.route('/recruiter-view')
+def recruiterView():
+	return render_template('/recruiter/recruiter-view.html')
+
 @app.route('/sign-up')
 def signUp():
     return render_template('/sign-up.html')
