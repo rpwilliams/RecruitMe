@@ -24,15 +24,15 @@ def login():
 
 @app.route('/sign-up')
 def signUp():
-    return render_template('/signUp.html')
+    return render_template('/sign-up.html')
 
-@app.route('/recruiter')
+@app.route('/sign-up/recruiter')
 def recruiter():
-    return render_template('/recruiter/recruiter.html')
+    return render_template('/recruiter/recruiter-sign-up.html')
 
-@app.route('/student')
+@app.route('/sign-up/student')
 def student():
-    return render_template('/student/student.html')
+    return render_template('/student/student-sign-up.html')
 
 if __name__ == '__main__':
   app.run()
