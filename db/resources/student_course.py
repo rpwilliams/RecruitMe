@@ -27,43 +27,45 @@ with open('Student.csv', 'rb') as csvfile:
 				for i in range(0,numofclasses):
 					writer.writerow([row[0], mathlist[i]])
 					print row[0], mathlist[i]
+
 			if row[1] == '3':
+				#print 'random num', numofclasses
+				for i in range(0,numofclasses):
+					writer.writerow([row[0], statlist[i]])
+					print row[0], statlist[i]
+
+			if row[1] == '4':
 				#print 'random num', numofclasses
 				for i in range(0,numofclasses):
 					writer.writerow([row[0], acctlist[i]])
 					print row[0], acctlist[i]
-			if row[1] == '4':
+			if row[1] == '5':
 				#print 'random num', numofclasses
 				for i in range(0,numofclasses):
 					writer.writerow([row[0], mislist[i]])
 					print row[0], mislist[i]
-			if row[1] == '5':
+			if row[1] == '6':
 				#print 'random num', numofclasses
 				for i in range(0,numofclasses):
 					writer.writerow([row[0], balist[i]])
 					print row[0], balist[i]
-			if row[1] == '6':
+			if row[1] == '7':
 				#print 'random num', numofclasses
 				for i in range(0,numofclasses):
 					writer.writerow([row[0], finlist[i]])
 					print row[0], finlist[i]
-			if row[1] == '7':
+			if row[1] == '8':
 				#print 'random num', numofclasses
 				for i in range(0,numofclasses):
 					writer.writerow([row[0], elist[i]])
 					print row[0], elist[i]
-			if row[1] == '8':
+			if row[1] == '9':
 				#print 'random num', numofclasses
 				for i in range(0,numofclasses):
 					writer.writerow([row[0], prlist[i]])
 					print row[0], prlist[i]
-			if row[1] == '9':
-				#print 'random num', numofclasses
-				for i in range(0,numofclasses):
-					writer.writerow([row[0], mclist[i]])
-					print row[0], cslist[i]
 			if row[1] == '10':
 				#print 'random num', numofclasses
 				for i in range(0,numofclasses):
-					writer.writerow([row[0], cslist[i]])
+					writer.writerow([row[0], mclist[i]])
 					print row[0], mclist[i]
