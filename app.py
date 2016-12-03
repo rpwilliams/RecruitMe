@@ -26,6 +26,10 @@ def login():
 def recruiterView():
 	return render_template('/recruiter/recruiter-view.html')
 
+@app.route('/student-view')
+def studentView():
+	return render_template('/student/student-view.html')
+
 @app.route('/sign-up')
 def signUp():
     return render_template('/sign-up.html')
