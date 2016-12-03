@@ -23,23 +23,27 @@
 	  					<div class="form-group">
 	  						<label for="id">Password:</label>
 							<input type="password" class="form-control" id="id" placeholder="Enter your password">
-	  					</div>
-	  				</form>
+						</div>
+						<a href="{{ url_for('studentView') }}" type="button" class="btn btn-success">LOGIN</a>
+					</form>
 	  			</div>
 			</div>
 			<!-- Recruiter Login -->
 			<div class="col-lg-6 panel panel-success">
 				<div class="panel-heading">Recruiter Login</div>
 	  			<div class="panel-body">
-	  				<div class="form-group">
-	  						<label for="id">Email:</label>
-							<input type="text" class="form-control" id="id" placeholder="Enter your email">
-	  					</div>
-	  					<div class="form-group">
-	  						<label for="id">Password:</label>
-							<input type="password" class="form-control" id="id" placeholder="Enter your password">
-	  					</div>
-	  			</div>
+	  				<form>
+		  				<div class="form-group">
+		  						<label for="id">Email:</label>
+								<input type="text" class="form-control" id="id" placeholder="Enter your email">
+		  					</div>
+		  					<div class="form-group">
+		  						<label for="id">Password:</label>
+								<input type="password" class="form-control" id="id" placeholder="Enter your password">
+		  					</div>
+		  					<a href="{{ url_for('recruiterView')}}" type="button" class="btn btn-success">LOGIN</a>
+		  				</div>
+	  				</form>
 			</div>
 		</div>
 	</div>
