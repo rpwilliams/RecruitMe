@@ -1,0 +1,13 @@
+People 				1000
+Student 			990
+Recruiter 			10
+University 			10
+Company 			10
+Industry 			10
+Major 				10
+Course 				20
+Salary_Range 		10
+Student_Course 		3914
+Company_Majors 		20
+Company_Industry 	10
+Student_Company 	800
