@@ -1,0 +1,2 @@
+INSERT INTO `Course` (`course_ID`,`title`,`credit_hours`) VALUES (1,"CS100",3),(2,"CS500",2),(3,"MATH100",3),(4,"MATH500",1),(5,"STAT100",3),(6,"STAT500",2),(7,"ACCT100",2),(8,"ACCT500",3),(9,"MIS100",2),(10,"MIS500",3);
+INSERT INTO `Course` (`course_ID`,`title`,`credit_hours`) VALUES (11,"BA100",3),(12,"BA500",2),(13,"FIN100",1),(14,"FIN500",1),(15,"E100",3),(16,"E500",2),(17,"PR100",2),(18,"PR500",1),(19,"MC100",3),(20,"MC500",1);
