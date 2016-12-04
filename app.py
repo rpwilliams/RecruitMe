@@ -87,11 +87,49 @@ def studentView():
 @app.route('/recruiter-view', methods = ['POST', 'GET'])
 def recruiterView():
 	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
-	u.name, s.GPA 
+	 u.name, s.GPA 
 	FROM People p JOIN Student s ON s.student_ID = p.ID 
 	JOIN Major m ON s.major_ID = m.major_ID
-	JOIN University u ON u.university_ID = s.university_ID;""")
-	return render_template('/recruiter/recruiter-view.html', rows=query)
+	JOIN University u ON u.university_ID = s.university_ID; """)
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line)
+	stringList = createStringList(parsedLine)
+	return render_template('/recruiter/recruiter-view.html', rows=stringList)
+
+# @Function parseString
+# Removes unwanted symbols from the string
+# @Param {line} The string to be parsed (NOT a tuple)
+# @Return String without characters and | characters
+def parseString(line):
+	count = 0
+	newWord = "";
+	for c in line:
+		if c != "'" and c != "u" and c != "(":
+			# Concatonate the string 
+			if c != ",":
+				newWord += c
+				# Don't add a | character if we have reached the end
+				if c == ")":
+					count = 0
+			# If there is a comma, replace it with a space
+			else:
+				count += 1
+				if count > 1:
+					newWord += " | "
+	return newWord
+
+def createStringList(line):
+	stringList = []
+	string = ""
+	for c in line:
+		if c == ")":
+			stringList.append(string)
+			string = ""
+		else:
+			string += c
+	return stringList
+
 	
 
 
