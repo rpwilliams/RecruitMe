@@ -75,23 +75,23 @@ def studentView():
 def recruiterView():
 	result = request.form
 	if(request == "POST"):
-		return render_template("/recruiter/recruiter-view.html", success = True, result = result)
+		return render_template("/recruiter/recruiter-view.php", success = True, result = result)
 	elif(request == "GET"):
 		result = request.form
-        return render_template('/recruiter/recruiter-view.html', result=result)
+        return render_template('/recruiter/recruiter-view.php', result=result)
 
 # Alternative to recruiterView(). If we can get this to work,
 # we can add people to the database when they sign up
-@app.route('/recruiter_sign_up', methods=['POST', 'GET'])
-def recruiter_sign_up():
-	_first = request.form['first']
-	_last = request.form['last']
-	_email = request.form['email']
-	_password = request.form['pwd']
-	_hashed_password = generate_password_hash(_password)
-	#cursor.callproc('sp_createUser',(_first, _last, _email, _hashed_password))
-	# else:
-	return json.dumps({'html':'All fields good!'})
+# @app.route('/recruiter_sign_up', methods=['POST', 'GET'])
+# def recruiter_sign_up():
+# 	_first = request.form['first']
+# 	_last = request.form['last']
+# 	_email = request.form['email']
+# 	_password = request.form['pwd']
+# 	_hashed_password = generate_password_hash(_password)
+# 	#cursor.callproc('sp_createUser',(_first, _last, _email, _hashed_password))
+# 	# else:
+# 	return json.dumps({'html':'All fields good!'})
 
 if __name__ == '__main__':
   app.run()
