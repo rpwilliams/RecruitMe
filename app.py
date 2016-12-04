@@ -25,8 +25,8 @@ def execute_query(query, args=()):
 
 @app.route("/viewdb")
 def viewdb():
-	rows = execute_query("""SELECT * FROM TABLES""")
-	return '<br>'.join(str(row) for row in rows)
+	rows = execute_query("""SELECT first_name, last_name FROM People""")
+	return '<br>'.join(str(row) for row in rows) # Displays everything in db in the browser
 
 @app.route('/')
 def index():
@@ -86,7 +86,12 @@ def studentView():
 
 @app.route('/recruiter-view', methods = ['POST', 'GET'])
 def recruiterView():
-	 return render_template('/recruiter/recruiter-view.html')
+	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
+	u.name, s.GPA 
+	FROM People p JOIN Student s ON s.student_ID = p.ID 
+	JOIN Major m ON s.major_ID = m.major_ID
+	JOIN University u ON u.university_ID = s.university_ID;""")
+	return render_template('/recruiter/recruiter-view.html', rows=query)
 	
 
 
