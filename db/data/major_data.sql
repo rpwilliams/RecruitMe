@@ -1,0 +1,1 @@
+INSERT INTO `Major` (`major_ID`,`name`) VALUES (1,"Computer Science"), (2,"Mathematics"), (3,"Statistics"), (4,"Accounting"), (5,"Management Information Systems"), (6,"Business Administration"), (7,"Finance"), (8,"Education"), (9,"Public Relations"), (10,"Mass Communications");
