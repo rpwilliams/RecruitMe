@@ -102,26 +102,14 @@
 								<th> Industry </th>
 								<th> Pay </th>
 								<th> Company Size </th>
+								<th> Interested Majors </th>
 							</thead>
 							<tbody>
-							 	<tr>
-							        <td>Bob</td>
-							        <td>Hamilton</td>
-							        <td>fakeEmail@ConocoPhillips.com</td>
-							        <td>ConocoPhillips</td>
-							        <td>Oil & Gas</td>
-							        <td>$80,000 - $89,999</td>
-							        <td>15,000 - 19,999</td>
-							      </tr>
-								 <tr>
-							        <td>Ryan</td>
-							        <td>Wilson</td>
-							        <td>fakeEmail@google.com</td>
-							        <td>Google Inc.</td>
-							        <td>Information Technology, Internet</td>
-							        <td>$90,000 - $99,999</td>
-							        <td>20,000+</td>
-							      </tr>
+								<tr>
+								{% for key, value in result.iteritems() %}
+							        <td>{{ value }}</td>
+								{% endfor %}
+								</tr>
 							</tbody>
 						</table>
 					</div>
