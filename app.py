@@ -1,3 +1,10 @@
+########################################
+# app.py           					   #
+# Description: The main python file    #
+# to be run for "RecruitMe"            #
+# Author: Ryan Williams				   #
+# Last modified 12.4.2016              #
+########################################
 from flask import Flask, render_template, request, jsonify, url_for, json, g
 from werkzeug import generate_password_hash, check_password_hash
 from flaskext.mysql import MySQL
@@ -12,9 +19,18 @@ app.config['MYSQL_DATABASE_DB'] = 'mhixon'
 app.config['MYSQL_DATABASE_HOST'] = 'mysql.cis.ksu.edu'
 mysql.init_app(app)
 
+# @function connect_to_mySQL
+# Connects to mySQL
 def connect_to_mySQL():
 	return mysql.connect()
 
+# @function execute_query
+# Executes a query
+# @param {query} the query to be executed
+# @param {args} the arguments
+# Enter a paramater like this:
+# execute_query("""SELECT * FROM table)
+# @return the rows in the query
 def execute_query(query, args=()):
 	conn = connect_to_mySQL()
 	cursor = conn.cursor()
@@ -23,6 +39,8 @@ def execute_query(query, args=()):
 	cursor.close()
 	return rows
 
+# @function viewdb
+# Test function to view a database at localhost:5000/viewdb
 @app.route("/viewdb")
 def viewdb():
 	rows = execute_query("""SELECT first_name, last_name FROM People""")
@@ -77,6 +95,7 @@ def student():
 
 @app.route('/student-view', methods = ['POST', 'GET'])
 def studentView():
+	### PUT SQL QUERIES HERE ###
 	result = request.form
 	if(request == "POST"):
 		return render_template("/student/student-view.html", success = True, result = result)
@@ -86,6 +105,7 @@ def studentView():
 
 @app.route('/recruiter-view', methods = ['POST', 'GET'])
 def recruiterView():
+	### PUT SQL QUERIES HERE ###
 	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
 	 u.name, s.GPA 
 	FROM People p JOIN Student s ON s.student_ID = p.ID 
@@ -119,6 +139,10 @@ def parseString(line):
 					newWord += " | "
 	return newWord
 
+# @Function createStringList
+# Converts a string to a string list at each ")"
+# @Param {line} The string to be converted
+# @Return A string list
 def createStringList(line):
 	stringList = []
 	string = ""
@@ -129,9 +153,6 @@ def createStringList(line):
 		else:
 			string += c
 	return stringList
-
-	
-
 
 # @app.route('/recruiter-view', methods = ['POST', 'GET'])
 # def recruiterView():
