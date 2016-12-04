@@ -96,12 +96,21 @@ def student():
 @app.route('/student-view', methods = ['POST', 'GET'])
 def studentView():
 	### PUT SQL QUERIES HERE ###
-	result = request.form
-	if(request == "POST"):
-		return render_template("/student/student-view.html", success = True, result = result)
-	elif(request == "GET"):
-		result = request.form
-        return render_template('/student/student-view.html', result=result)
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID""")
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
 
 @app.route('/recruiter-view', methods = ['POST', 'GET'])
 def recruiterView():
@@ -113,15 +122,16 @@ def recruiterView():
 	JOIN University u ON u.university_ID = s.university_ID; """)
 	line = str(query) # Convert the tuple to a string
 	stringList = []
-	parsedLine = parseString(line)
+	parsedLine = parseString(line, False)
 	stringList = createStringList(parsedLine)
 	return render_template('/recruiter/recruiter-view.html', rows=stringList)
 
 # @Function parseString
 # Removes unwanted symbols from the string
 # @Param {line} The string to be parsed (NOT a tuple)
+# @Param {student} true if student view, false if recruiter view
 # @Return String without characters and | characters
-def parseString(line):
+def parseString(line, student):
 	count = 0
 	newWord = "";
 	for c in line:
@@ -131,12 +141,18 @@ def parseString(line):
 				newWord += c
 				# Don't add a | character if we have reached the end
 				if c == ")":
-					count = 0
+					count = -1
 			# If there is a comma, replace it with a space
 			else:
 				count += 1
-				if count > 1:
-					newWord += " | "
+				if count > 2:
+					# Add a dash for salary range
+					if (count == 5) and student:
+						newWord += "| $"
+					elif (count == 6) and student:
+						newWord += " -"
+					else:
+						newWord += " | "
 	return newWord
 
 # @Function createStringList
