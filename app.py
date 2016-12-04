@@ -80,6 +80,8 @@ def recruiterView():
 		result = request.form
         return render_template('/recruiter/recruiter-view.html', result=result)
 
+# Alternative to recruiterView(). If we can get this to work,
+# we can add people to the database when they sign up
 @app.route('/recruiter_sign_up', methods=['POST', 'GET'])
 def recruiter_sign_up():
 	_first = request.form['first']
@@ -88,7 +90,6 @@ def recruiter_sign_up():
 	_password = request.form['pwd']
 	_hashed_password = generate_password_hash(_password)
 	#cursor.callproc('sp_createUser',(_first, _last, _email, _hashed_password))
-
 	# else:
 	return json.dumps({'html':'All fields good!'})
 
