@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, jsonify, url_for, json
+from flask import Flask, render_template, request, jsonify, url_for, json, g
 from werkzeug import generate_password_hash, check_password_hash
 from flaskext.mysql import MySQL
+import csv
 
 app = Flask(__name__)
 mysql = MySQL()
@@ -12,8 +13,20 @@ app.config['MYSQL_DATABASE_HOST'] = 'mysql.cis.ksu.edu'
 mysql.init_app(app)
 
 def connect_to_mySQL():
-	conn = mysql.connect()
+	return mysql.connect()
+
+def execute_query(query, args=()):
+	conn = connect_to_mySQL()
 	cursor = conn.cursor()
+	cursor.execute(query, args)
+	rows = cursor.fetchall()
+	cursor.close()
+	return rows
+
+@app.route("/viewdb")
+def viewdb():
+	rows = execute_query("""SELECT * FROM TABLES""")
+	return '<br>'.join(str(row) for row in rows)
 
 @app.route('/')
 def index():
@@ -73,12 +86,23 @@ def studentView():
 
 @app.route('/recruiter-view', methods = ['POST', 'GET'])
 def recruiterView():
-	result = request.form
-	if(request == "POST"):
-		return render_template("/recruiter/recruiter-view.php", success = True, result = result)
-	elif(request == "GET"):
-		result = request.form
-        return render_template('/recruiter/recruiter-view.php', result=result)
+	 return render_template('/recruiter/recruiter-view.html')
+	
+
+
+# @app.route('/recruiter-view', methods = ['POST', 'GET'])
+# def recruiterView():
+# 	_first = request.form['first']
+# 	_last = request.form['last']
+# 	_email = request.form['email']
+# 	_password = request.form['pwd']
+
+# 	result = request.form
+# 	if(request == "POST"):
+# 		return render_template("/recruiter/recruiter-view.php", success = True, result = result)
+# 	elif(request == "GET"):
+# 		result = request.form
+#         return render_template('/recruiter/recruiter-view.php', result=result)
 
 # Alternative to recruiterView(). If we can get this to work,
 # we can add people to the database when they sign up

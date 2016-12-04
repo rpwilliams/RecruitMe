@@ -92,34 +92,7 @@
 							</thead>
 							<tbody>
 								<tr>
-							        <td>
-							        	<?php
-											$servername = "mysql.cis.ksu.edu";
-											$username = "mhixon";
-											$password = "cis560";
-											$dbname = "mhixon";
-
-											// Create connection
-											$conn = new mysqli($servername, $username, $password, $dbname);
-											// Check connection
-											if ($conn->connect_error) {
-											    die("Connection failed: " . $conn->connect_error);
-											} 
-
-											$sql = "SELECT student_ID FROM Student";
-											$result = $conn->query($sql);
-
-											if ($result->num_rows > 0) {
-											    // output data of each row
-											    while($row = $result->fetch_assoc()) {
-											        echo "id: " . $row["student_ID"].;
-											    }
-											} else {
-											    echo "0 results";
-											}
-											$conn->close();
-										?>
-							        </td>
+							        <td>{{ value }}</td>
 								</tr>
 							</tbody>
 						</table>
