@@ -17,6 +17,7 @@ app.config['MYSQL_DATABASE_USER'] = 'mhixon'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'cis560'
 app.config['MYSQL_DATABASE_DB'] = 'mhixon'
 app.config['MYSQL_DATABASE_HOST'] = 'mysql.cis.ksu.edu'
+app.config['MYSQL_USE_UNICODE'] = False
 mysql.init_app(app)
 
 # @function connect_to_mySQL
@@ -94,20 +95,23 @@ def student():
 #     query = execute_query("""insert into People(first_name, last_name, email, student_ID) values (%s,%s,%s,%s)""", [request.form['first'], request.form['last'], request.form['email'], request.form['id']]);
 #     return jsonify({'student': student}), 201
 
+##############################################
+#          STUDENT VIEW FUNCTIONS			 #
+##############################################
 @app.route('/student-view', methods = ['POST', 'GET'])
 def studentView():
-	student = {
-		'firstName': request.form['first'],
-		'lastName' : request.form['last'],
-		'email' : request.form['email'],
-		'password' : request.form['pwd'],
-		'studentID' : request.form['id'],
-		'GPA' : request.form['GPA'],
-		'major' : request.form['major'],
-		'university': request.form['university']
-	}
-	query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [student['firstName'], student['lastName'], student['email'], student['studentID']]);	
-	query = execute_query("""insert into Student(student_ID, major_ID, university_ID, GPA) values (%s,%s,%s,%s)""", [student['studentID'], student['major'], student['university'], student['GPA']]);	
+	# student = {
+	# 	'firstName': request.form['first'],
+	# 	'lastName' : request.form['last'],
+	# 	'email' : request.form['email'],
+	# 	'password' : request.form['pwd'],
+	# 	'studentID' : request.form['id'],
+	# 	'GPA' : request.form['GPA'],
+	# 	'major' : request.form['major'],
+	# 	'university': request.form['university']
+	# }
+	# query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [student['firstName'], student['lastName'], student['email'], student['studentID']]);	
+	# query = execute_query("""insert into Student(student_ID, major_ID, university_ID, GPA) values (%s,%s,%s,%s)""", [student['studentID'], student['major'], student['university'], student['GPA']]);	
 	### PUT SQL QUERIES HERE ###
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -123,39 +127,13 @@ def studentView():
 	stringList = []
 	parsedLine = parseString(line, True)
 	stringList = createStringList(line)
-	return render_template('/student/student-view.html', rows=query)
-
-@app.route('/recruiter-view', methods = ['POST', 'GET'])
-def recruiterView():
-	recruiter = {
-		'firstName': request.form['first'],
-		'lastName' : request.form['last'],
-		'email' : request.form['email'],
-		'id' : request.form['id'],
-		'password' : request.form['pwd'],
-		'company': request.form['company']
-	}
-	query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [recruiter['firstName'], recruiter['lastName'], recruiter['email'], recruiter['id']]);	
-	query = execute_query("""insert into Recruiter(recruiter_ID, company_ID) values (%s,%s)""", [recruiter['id'], recruiter['company']]);	
-
-	### PUT SQL QUERIES HERE ###
-	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
-	 u.name, s.GPA 
-	FROM People p JOIN Student s ON s.student_ID = p.ID 
-	JOIN Major m ON s.major_ID = m.major_ID
-	JOIN University u ON u.university_ID = s.university_ID; """)
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, False)
-	#stringList = createStringList(parsedLine)
-	stringList = createStringList(line)
-	return render_template('/recruiter/recruiter-view.html', rows=stringList)
+	return render_template('/student/student-view.html', rows=stringList)
 
 @app.route('/student-view/filter', methods=["GET", "POST"])
 def filterRecruiters():
 	company = request.form["companyradio"]
-	#industry = request.form.get("industryradio")
-	# pay = request.form["payradio"]
+	industry = request.form.get("industryradio")
+	pay = request.form["payradio"]
 	query = ""
 	print company
 	if(company == "augue"):
@@ -164,22 +142,21 @@ def filterRecruiters():
 	  	query = filterRecruiterCompany("Posuere Vulputate Lacus PC")
 	elif(company == "suspendisse"):
 		query = filterRecruiterCompany("Suspendisse Non LLC")
-	# elif(industry == "education"):
-	# 	query = filterRecruiterIndustry("Education")
-	# elif(industry == "financial"):
-	# 	query = filterRecruiterIndustry("Financial Services")
-	# elif(industry == "utilties"):
-	# 	query = filterRecruiterIndustry("Services")
-	# elif(pay == "5000"):
-	# 	query = filterRecruiterSalary("5000")
-	# elif(pay == "6000"):
-	# 	query = filterRecruiterSalary("6000")
-	# elif(pay == "7000"):
-	# 	query = filterRecruiterSalary("7000")
+	elif(industry == "education"):
+		query = filterRecruiterIndustry("Education")
+	elif(industry == "financial"):
+		query = filterRecruiterIndustry("Financial Services")
+	elif(industry == "utilties"):
+		query = filterRecruiterIndustry("Services")
+	elif(pay == "5000"):
+		query = filterRecruiterSalary("5000")
+	elif(pay == "6000"):
+		query = filterRecruiterSalary("6000")
+	elif(pay == "7000"):
+		query = filterRecruiterSalary("7000")
 	return render_template('/student/student-view.html', rows=query)
 
-
-@app.route('/student-view/filter/company/<company>', methods = ['POST', 'GET'])
+@app.route('/company/<company>', methods = ['POST', 'GET'])
 def filterRecruiterCompany(company):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -274,6 +251,101 @@ def filterRecruiterMajor(major):
 	stringList = createStringList(parsedLine)
 	return stringList
 
+##############################################
+#          RECRUITER VIEW FUNCTIONS			 #
+##############################################
+@app.route('/recruiter-view', methods = ['POST', 'GET'])
+def recruiterView():
+	# recruiter = {
+	# 	'firstName': request.form['first'],
+	# 	'lastName' : request.form['last'],
+	# 	'email' : request.form['email'],
+	# 	'id' : request.form['id'],
+	# 	'password' : request.form['pwd'],
+	# 	'company': request.form['company']
+	# }
+	# query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [recruiter['firstName'], recruiter['lastName'], recruiter['email'], recruiter['id']]);	
+	# query = execute_query("""insert into Recruiter(recruiter_ID, company_ID) values (%s,%s)""", [recruiter['id'], recruiter['company']]);	
+
+	### PUT SQL QUERIES HERE ###
+	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
+	 u.name, s.GPA 
+	FROM People p JOIN Student s ON s.student_ID = p.ID 
+	JOIN Major m ON s.major_ID = m.major_ID
+	JOIN University u ON u.university_ID = s.university_ID; """)
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, False)
+	stringList = createStringList(parsedLine)
+	return render_template('/recruiter/recruiter-view.html', rows=stringList)
+
+@app.route('/recruiter-view/filter', methods = ['POST', 'GET'])
+def filterStudents():
+	major = request.form["majorradio"]
+	gpa = request.form["gparadio"]
+	college = request.form["collegeradio"]
+	query = ""
+	print company
+	if(major == "Accounting"): 
+		query = filterStudentMajor('Accounting')
+	elif(major == "Computer Science"):
+	  	query = filterStudentMajor("Computer Science")
+	elif(gpa == "2-3"):
+		query = filterStudentGPA("2.00")
+	elif(gpa == "3-4"):
+		query = filterStudentGPA("3.00")
+	elif(gpa == "4+"):
+		query = filterStudentGPA("4.00")
+	elif(college == "Kansas State University"):
+		query = filterStudentCollege("Kansas State University")
+	elif(college == "Oklahoma State University"):
+		query = filterStudentCollege("Oklahoma State University")
+	return render_template('/recruiter/recruiter-view.html', rows=query)
+
+@app.route('/recruiter-view/major/<major>', methods = ['POST', 'GET'])
+def filterStudentMajor(major):
+	### PUT SQL QUERIES HERE ###
+	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
+	 u.name, s.GPA 
+	FROM People p JOIN Student s ON s.student_ID = p.ID 
+	JOIN Major m ON s.major_ID = m.major_ID
+	JOIN University u ON u.university_ID = s.university_ID
+	WHERE m.name = %s; """, [major])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, False)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
+	#return stringList
+
+def filterStudentGPA(gpa):
+	### PUT SQL QUERIES HERE ###
+	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
+	 u.name, s.GPA 
+	FROM People p JOIN Student s ON s.student_ID = p.ID 
+	JOIN Major m ON s.major_ID = m.major_ID
+	JOIN University u ON u.university_ID = s.university_ID
+	WHERE s.GPA = %s; """, [gpa])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, False)
+	stringList = createStringList(parsedLine)
+	return stringList
+
+def filterStudentCollege(college):
+	### PUT SQL QUERIES HERE ###
+	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
+	 u.name, s.GPA 
+	FROM People p JOIN Student s ON s.student_ID = p.ID 
+	JOIN Major m ON s.major_ID = m.major_ID
+	JOIN University u ON u.university_ID = s.university_ID
+	WHERE u.name = %s; """, [college])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, False)
+	stringList = createStringList(parsedLine)
+	return stringList
+
 
 # @Function parseString
 # Removes unwanted symbols from the string
@@ -288,11 +360,11 @@ def parseString(line, student):
 		if c != "'" and c != "(":
 
 			# Preserve all u's except for the one's we don't want
-			if(nextU):
-				nextU = False
-				continue
-			if(c == " " or c == "("):
-				nextU = True
+			# if(nextU):
+			# 	nextU = False
+			# 	continue
+			# if(c == " " or c == "("):
+			# 	nextU = True
 
 			# Ensure we get rid of the u's before the words
 			# Concatonate the string 

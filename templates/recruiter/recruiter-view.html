@@ -21,55 +21,52 @@
 					</div>
 					<div class="panel-body" style="min-height: 500px; max-height: 500px;">
 						<ul class="list-unstyled">
-							<!-- Collapsable Major checkboxes -->
+							<form method="post" action="{{url_for('filterStudents')}}" enctype="multipart/form-data">
+							<!-- Collapsable Major radioes -->
 							<li>
 								<a data-toggle="collapse" href="#majorCollapse"><span class="glyphicon glyphicon glyphicon-circle-arrow-down"></span> Major</a>
 								<div id="majorCollapse" class="panel-collapse collapse">
-							      <form>
-							      	<div class="checkbox">
-									  <label><input type="checkbox" checked="true" value="">Accounting</label>
+							      	<div class="radio">
+									  <label><input type="radio" name="majorradio" value="Accounting">Accounting</label>
 									</div>
-									<div class="checkbox">
-									  <label><input type="checkbox" value="" checked="true">Computer Science</label>
+									<div class="radio">
+									  <label><input type="radio" name="majorradio" value="Computer Science">Computer Science</label>
 									</div>
-							      </form>
 							    </div>
 						    </li>
 
 						    <!-- Collapsable GPA checkboxes -->
 							<li>
-							    <a data-toggle="collapse" href="#gpaCollapse"><span class="glyphicon glyphicon glyphicon-circle-arrow-down"></span> GPA</a>
-								<div id="gpaCollapse" class="panel-collapse collapse">
-							      <form>
-							      	<div class="checkbox">
-									  <label><input type="checkbox" value="" checked="true">2.00 - 2.99</label>
+								    <a data-toggle="collapse" href="#gpaCollapse"><span class="glyphicon glyphicon glyphicon-circle-arrow-down"></span> GPA</a>
+									<div id="gpaCollapse" class="panel-collapse collapse">
+							      	<div class="radio">
+									  <label><input type="radio" name="gparadio" value="2-3">2.00 - 2.99</label>
 									</div>
-									<div class="checkbox">
-									  <label><input type="checkbox" value="" checked="true">3.00 - 3.99</label>
+									<div class="radio">
+									  <label><input type="radio" name="gparadio" value="3-4">3.00 - 3.99</label>
 									</div>
-									<div class="checkbox">
-									  <label><input type="checkbox" value="" checked="true">4.00+</label>
+									<div class="radio">
+									  <label><input type="radio" name="gparadio" value="4+">4.00+</label>
 									</div>
-							      </form>
+						     
 							    </div>
 						    </li>
 
-						    <!-- Collapsable college checkboxes -->
+						    <!-- Collapsable college radioes -->
 						    <li>
 							    <a data-toggle="collapse" href="#collegeCollapse"><span class="glyphicon glyphicon glyphicon-circle-arrow-down"></span> College</a>
 								<div id="collegeCollapse" class="panel-collapse collapse">
-							      <form>
-							      	<div class="checkbox">
-									  <label><input type="checkbox" checked="true">Kansas State University</label>
+							      	<div class="radio">
+									  <label><input type="radio" name="collegeradio" value="Kansas State University">Kansas State University</label>
 									</div>
-									<div class="checkbox">
-									  <label><input type="checkbox" checked="true">Oklahoma State University</label>
+									<div class="radio">
+									  <label><input type="radio" name="collegeradio" value="Oklahoma State University">Oklahoma State University</label>
 									</div>
-							      </form>
 							    </div>
 						    </li>
 					    </ul>
-					    <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-repeat"></span> FILTER</button>
+					    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-repeat"></span> FILTER</button>
+					    </form>
 					</div>
 					<div class="panel-footer">
 						<button type="button" class="btn btn-danger" onclick="deleteAccount()">DELETE ACCOUNT</button>
