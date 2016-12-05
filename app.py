@@ -126,6 +126,83 @@ def recruiterView():
 	stringList = createStringList(parsedLine)
 	return render_template('/recruiter/recruiter-view.html', rows=stringList)
 
+@app.route('/student-view/industry/<industry>', methods = ['POST', 'GET'])
+def filterRecruiterIndustry(industry):
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID
+	WHERE i.name = %s""", [industry])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
+
+@app.route('/student-view/salaryRange/<salaryRange>', methods = ['POST', 'GET'])
+def filterRecruiterSalary(salaryRange):
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID
+	WHERE sr.low_end = %s""", [salaryRange])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
+
+@app.route('/student-view/numEmployees/<numEmployees>', methods = ['POST', 'GET'])
+def filterRecruiterEmployees(numEmployees):
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID
+	WHERE c.num_of_employees = %s""", [numEmployees])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
+
+@app.route('/student-view/major/<major>', methods = ['POST', 'GET'])
+def filterRecruiterMajor(major):
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID
+	WHERE m.name = %s""", [major])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
+
+
 # @Function parseString
 # Removes unwanted symbols from the string
 # @Param {line} The string to be parsed (NOT a tuple)
@@ -135,7 +212,8 @@ def parseString(line, student):
 	count = 0
 	newWord = "";
 	for c in line:
-		if c != "'" and c != "u" and c != "(":
+		if c != "'" and c != "(" and c != "u":
+			# Ensure we get rid of the u's before the words
 			# Concatonate the string 
 			if c != ",":
 				newWord += c
