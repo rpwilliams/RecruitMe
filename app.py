@@ -2,7 +2,7 @@
 # app.py           					   #
 # Description: The main python file    #
 # to be run for "RecruitMe"            #
-# Author: Ryan Williams				   #
+# Author: Ryan Williams, Matt Hixon	   #
 # Last modified 12.4.2016              #
 ########################################
 from flask import Flask, render_template, request, jsonify, url_for, json, g
@@ -17,7 +17,6 @@ app.config['MYSQL_DATABASE_USER'] = 'mhixon'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'cis560'
 app.config['MYSQL_DATABASE_DB'] = 'mhixon'
 app.config['MYSQL_DATABASE_HOST'] = 'mysql.cis.ksu.edu'
-app.config['MYSQL_USE_UNICODE'] = False
 mysql.init_app(app)
 
 # @function connect_to_mySQL
@@ -129,34 +128,53 @@ def studentView():
 	stringList = createStringList(parsedLine)
 	return render_template('/student/student-view.html', rows=stringList)
 
-@app.route('/student-view/filter', methods=["GET", "POST"])
-def filterRecruiters():
-	company = request.form["companyradio"]
-	industry = request.form.get("industryradio")
-	pay = request.form["payradio"]
-	query = ""
-	print company
-	if(company == "augue"):
-		query = filterRecruiterCompany("Augue Porttitor Interdum Corp.")
-	elif(company == "posuere"):
-	  	query = filterRecruiterCompany("Posuere Vulputate Lacus PC")
-	elif(company == "suspendisse"):
-		query = filterRecruiterCompany("Suspendisse Non LLC")
-	elif(industry == "education"):
-		query = filterRecruiterIndustry("Education")
-	elif(industry == "financial"):
-		query = filterRecruiterIndustry("Financial Services")
-	elif(industry == "utilties"):
-		query = filterRecruiterIndustry("Services")
-	elif(pay == "5000"):
-		query = filterRecruiterSalary("5000")
-	elif(pay == "6000"):
-		query = filterRecruiterSalary("6000")
-	elif(pay == "7000"):
-		query = filterRecruiterSalary("7000")
-	return render_template('/student/student-view.html', rows=query)
+@app.route('/student-view-login', methods = ['POST', 'GET'])
+def studentViewLogin():
+	### PUT SQL QUERIES HERE ###
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID""")
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
 
-@app.route('/company/<company>', methods = ['POST', 'GET'])
+# @app.route('/student-view/filter', methods=["GET", "POST"])
+# def filterRecruiters():
+# 	company = request.form["companyradio"]
+# 	industry = request.form.get("industryradio")
+# 	pay = request.form["payradio"]
+# 	query = ""
+# 	print company
+# 	if(company == "augue"):
+# 		query = filterRecruiterCompany("Augue Porttitor Interdum Corp.")
+# 	elif(company == "posuere"):
+# 	  	query = filterRecruiterCompany("Posuere Vulputate Lacus PC")
+# 	elif(company == "suspendisse"):
+# 		query = filterRecruiterCompany("Suspendisse Non LLC")
+# 	elif(industry == "education"):
+# 		query = filterRecruiterIndustry("Education")
+# 	elif(industry == "financial"):
+# 		query = filterRecruiterIndustry("Financial Services")
+# 	elif(industry == "utilties"):
+# 		query = filterRecruiterIndustry("Services")
+# 	elif(pay == "5000"):
+# 		query = filterRecruiterSalary("5000")
+# 	elif(pay == "6000"):
+# 		query = filterRecruiterSalary("6000")
+# 	elif(pay == "7000"):
+# 		query = filterRecruiterSalary("7000")
+# 	return render_template('/student/student-view.html', rows=query)
+
+@app.route('/student-view/company/<company>', methods = ['POST', 'GET'])
 def filterRecruiterCompany(company):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -175,7 +193,7 @@ def filterRecruiterCompany(company):
 	stringList = createStringList(parsedLine)
 	return stringList
 
-@app.route('/student-view/filter/industry/<industry>', methods = ['POST', 'GET'])
+@app.route('/student-view/industry/<industry>', methods = ['POST', 'GET'])
 def filterRecruiterIndustry(industry):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -192,9 +210,10 @@ def filterRecruiterIndustry(industry):
 	stringList = []
 	parsedLine = parseString(line, True)
 	stringList = createStringList(parsedLine)
-	return stringList
+	return render_template('/student/student-view.html', rows=stringList)
+	#return stringList
 
-@app.route('/student-view/filter/salaryRange/<salaryRange>', methods = ['POST', 'GET'])
+@app.route('/student-view/salaryRange/<salaryRange>', methods = ['POST', 'GET'])
 def filterRecruiterSalary(salaryRange):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -213,7 +232,7 @@ def filterRecruiterSalary(salaryRange):
 	stringList = createStringList(parsedLine)
 	return stringList
 
-@app.route('/student-view/filter/numEmployees/<numEmployees>', methods = ['POST', 'GET'])
+@app.route('/student-view/numEmployees/<numEmployees>', methods = ['POST', 'GET'])
 def filterRecruiterEmployees(numEmployees):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -232,7 +251,7 @@ def filterRecruiterEmployees(numEmployees):
 	stringList = createStringList(parsedLine)
 	return stringList
 
-@app.route('/student-view/filter/major/<major>', methods = ['POST', 'GET'])
+@app.route('/student-view/major/<major>', methods = ['POST', 'GET'])
 def filterRecruiterMajor(major):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -256,24 +275,22 @@ def filterRecruiterMajor(major):
 ##############################################
 @app.route('/recruiter-view', methods = ['POST', 'GET'])
 def recruiterView():
-	# recruiter = {
-	# 	'firstName': request.form['first'],
-	# 	'lastName' : request.form['last'],
-	# 	'email' : request.form['email'],
-	# 	'id' : request.form['id']
-	# 	'password' : request.form['pwd'],
-	# 	'company': request.form['company']
-	# }
-	# query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [recruiter['firstName'], recruiter['lastName'], recruiter['email'], recruiter['id']]);	
-	# query = execute_query("""insert into Recruiter(recruiter_ID, company_ID) values (%s,%s)""", [recruiter['id'], recruiter['company']]);	
+	recruiter = {
+		'firstName': request.form['first'],
+		'lastName' : request.form['last'],
+		'email' : request.form['email'],
+		'id' : request.form['id'],
+		'password' : request.form['pwd'],
+		'company': request.form['company']
+	}
+	query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [recruiter['firstName'], recruiter['lastName'], recruiter['email'], recruiter['id']]);	
+	query = execute_query("""insert into Recruiter(recruiter_ID, company_ID) values (%s,%s)""", [recruiter['id'], recruiter['company']]);	
 
 	### PUT SQL QUERIES HERE ###
 	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,u.name, s.GPA 
 	FROM People p JOIN Student s ON s.student_ID = p.ID 
 	JOIN Major m ON s.major_ID = m.major_ID
 	JOIN University u ON u.university_ID = s.university_ID; """)
-
-
 	# for tup in query:
 	# 	query = [item.encode('ascii','backslashreplace') for item in tup]
 	# print query
@@ -315,6 +332,43 @@ def filterStudents():
 		query = filterStudentCollege("Oklahoma State University")
 	return render_template('/recruiter/recruiter-view.html', rows=query)
 
+@app.route('/recruiter-view-login', methods = ['POST', 'GET'])
+def recruiterViewLogin():
+	### PUT SQL QUERIES HERE ###
+	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
+	 u.name, s.GPA 
+	FROM People p JOIN Student s ON s.student_ID = p.ID 
+	JOIN Major m ON s.major_ID = m.major_ID
+	JOIN University u ON u.university_ID = s.university_ID; """)
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, False)
+	stringList = createStringList(parsedLine)
+	return render_template('/recruiter/recruiter-view.html', rows=query)
+
+# @app.route('/recruiter-view/filter', methods = ['POST', 'GET'])
+# def filterStudents():
+# 	major = request.form["majorradio"]
+# 	gpa = request.form["gparadio"]
+# 	college = request.form["collegeradio"]
+# 	if (major == "Accounting"): 
+# 		return redirect("localhost:5000/recruiter-view/major/Accounting")
+# 	else:
+# 		return redirect("localhost:5000/recruiter-view/major/Accounting")
+	# elif(major == "Computer Science"):
+	# 	query = filterStudentMajor("Computer Science")
+	# elif(gpa == "2-3"):
+	# 	query = filterStudentGPA("2.00")
+	# elif(gpa == "3-4"):
+	# 	query = filterStudentGPA("3.00")
+	# elif(gpa == "4+"):
+	# 	query = filterStudentGPA("4.00")
+	# elif(college == "Kansas State University"):
+	# 	query = filterStudentCollege("Kansas State University")
+	# elif(college == "Oklahoma State University"):
+	# 	query = filterStudentCollege("Oklahoma State University")
+	#return render_template('/recruiter/recruiter-view.html', rows=query)
+
 @app.route('/recruiter-view/major/<major>', methods = ['POST', 'GET'])
 def filterStudentMajor(major):
 	### PUT SQL QUERIES HERE ###
@@ -345,6 +399,7 @@ def filterStudentGPA(gpa):
 	stringList = createStringList(parsedLine)
 	return stringList
 
+@app.route('/recruiter-view/college/<college>', methods = ['POST', 'GET'])
 def filterStudentCollege(college):
 	### PUT SQL QUERIES HERE ###
 	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
@@ -357,8 +412,8 @@ def filterStudentCollege(college):
 	stringList = []
 	parsedLine = parseString(line, False)
 	stringList = createStringList(parsedLine)
-	return stringList
-
+	return render_template('/student/student-view.html', rows=stringList)
+	#return stringList
 
 # @Function parseString
 # Removes unwanted symbols from the string
@@ -368,7 +423,6 @@ def filterStudentCollege(college):
 def parseString(line, student):
 	count = 0
 	newWord = ""
-	nextU = False
 	for c in line:
 		if c != "'" and c != "(":
 

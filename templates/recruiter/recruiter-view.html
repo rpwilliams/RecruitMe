@@ -21,7 +21,7 @@
 					</div>
 					<div class="panel-body" style="min-height: 500px; max-height: 500px;">
 						<ul class="list-unstyled">
-							<form method="post" action="{{url_for('filterStudents')}}" enctype="multipart/form-data">
+							<form method="post" action="{{ url_for('filterStudentCollege', college = 'Kansas State University')}}">
 							<!-- Collapsable Major radioes -->
 							<li>
 								<a data-toggle="collapse" href="#majorCollapse"><span class="glyphicon glyphicon glyphicon-circle-arrow-down"></span> Major</a>

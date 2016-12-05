@@ -21,7 +21,7 @@
 					</div>
 					<div class="panel-body" style="min-height: 500px; max-height: 500px;">
 						<ul class="list-unstyled">
-							<form method="post" action="{{url_for('filterRecruiters')}}" enctype="multipart/form-data">
+							<form method="post" action="{{ url_for('filterRecruiterIndustry', industry = 'Financial Services')}}">
 								<!-- Collapsable Company radioes -->
 								<li>
 									<a data-toggle="collapse" href="#companyCollapse"><span class="glyphicon glyphicon glyphicon-circle-arrow-down"></span> Company</a>
