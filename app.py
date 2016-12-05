@@ -210,9 +210,17 @@ def filterRecruiterMajor(major):
 # @Return String without characters and | characters
 def parseString(line, student):
 	count = 0
-	newWord = "";
+	newWord = ""
+	nextU = False
 	for c in line:
-		if c != "'" and c != "(" and c != "u":
+		if c != "'" and c != "(":
+
+			if(nextU):
+				nextU = False
+				continue
+			if(c == " " or c == "("):
+				nextU = True
+
 			# Ensure we get rid of the u's before the words
 			# Concatonate the string 
 			if c != ",":
