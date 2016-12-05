@@ -126,7 +126,32 @@ def recruiterView():
 	stringList = createStringList(parsedLine)
 	return render_template('/recruiter/recruiter-view.html', rows=query)
 
-@app.route('/student-view/company/<company>', methods = ['POST', 'GET'])
+@app.route('/student-view/filter/', methods=["GET", "POST"])
+def filterRecruiters():
+	company = request.form['companyradio']
+	industry = request.form['industryradio']
+	pay = request.form['payradio']
+	if(company == "augue"):
+		filterRecruiterCompany("Augue Porttitor Interdum Corp.")
+	elif(company == "posuere"):
+		filterRecruiterCompany("Posuere Vulputate Lacus PC")
+	elif(company == "suspendisse"):
+		filterRecruiterCompany("Suspendisse Non LLC")
+	elif(industry == "education"):
+		filterRecruiterIndustry("Education")
+	elif(industry == "financial"):
+		filterRecruiterIndustry("Financial Services")
+	elif(industry == "utilties"):
+		filterRecruiterIndustry("Services")
+	elif(pay == "5000"):
+		filterRecruiterSalary("5000")
+	elif(pay == "6000"):
+		filterRecruiterSalary("6000")
+	elif(pay == "7000"):
+		filterRecruiterSalary("7000")
+
+
+@app.route('/student-view/filter/company/<company>', methods = ['POST', 'GET'])
 def filterRecruiterCompany(company):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -145,7 +170,7 @@ def filterRecruiterCompany(company):
 	stringList = createStringList(parsedLine)
 	return render_template('/student/student-view.html', rows=query)
 
-@app.route('/student-view/industry/<industry>', methods = ['POST', 'GET'])
+@app.route('/student-view/filter/industry/<industry>', methods = ['POST', 'GET'])
 def filterRecruiterIndustry(industry):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -164,7 +189,7 @@ def filterRecruiterIndustry(industry):
 	stringList = createStringList(parsedLine)
 	return render_template('/student/student-view.html', rows=stringList)
 
-@app.route('/student-view/salaryRange/<salaryRange>', methods = ['POST', 'GET'])
+@app.route('/student-view/filter/salaryRange/<salaryRange>', methods = ['POST', 'GET'])
 def filterRecruiterSalary(salaryRange):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -183,7 +208,7 @@ def filterRecruiterSalary(salaryRange):
 	stringList = createStringList(parsedLine)
 	return render_template('/student/student-view.html', rows=stringList)
 
-@app.route('/student-view/numEmployees/<numEmployees>', methods = ['POST', 'GET'])
+@app.route('/student-view/filter/numEmployees/<numEmployees>', methods = ['POST', 'GET'])
 def filterRecruiterEmployees(numEmployees):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -202,7 +227,7 @@ def filterRecruiterEmployees(numEmployees):
 	stringList = createStringList(parsedLine)
 	return render_template('/student/student-view.html', rows=stringList)
 
-@app.route('/student-view/major/<major>', methods = ['POST', 'GET'])
+@app.route('/student-view/filter/major/<major>', methods = ['POST', 'GET'])
 def filterRecruiterMajor(major):
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
