@@ -100,18 +100,18 @@ def student():
 ##############################################
 @app.route('/student-view', methods = ['POST', 'GET'])
 def studentView():
-	# student = {
-	# 	'firstName': request.form['first'],
-	# 	'lastName' : request.form['last'],
-	# 	'email' : request.form['email'],
-	# 	'password' : request.form['pwd'],
-	# 	'studentID' : request.form['id'],
-	# 	'GPA' : request.form['GPA'],
-	# 	'major' : request.form['major'],
-	# 	'university': request.form['university']
-	# }
-	# query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [student['firstName'], student['lastName'], student['email'], student['studentID']]);	
-	# query = execute_query("""insert into Student(student_ID, major_ID, university_ID, GPA) values (%s,%s,%s,%s)""", [student['studentID'], student['major'], student['university'], student['GPA']]);	
+	student = {
+		'firstName': request.form['first'],
+		'lastName' : request.form['last'],
+		'email' : request.form['email'],
+		'password' : request.form['pwd'],
+		'studentID' : request.form['id'],
+		'GPA' : request.form['GPA'],
+		'major' : request.form['major'],
+		'university': request.form['university']
+	}
+	query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [student['firstName'], student['lastName'], student['email'], student['studentID']]);	
+	query = execute_query("""insert into Student(student_ID, major_ID, university_ID, GPA) values (%s,%s,%s,%s)""", [student['studentID'], student['major'], student['university'], student['GPA']]);	
 	### PUT SQL QUERIES HERE ###
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -126,7 +126,7 @@ def studentView():
 	line = str(query) # Convert the tuple to a string
 	stringList = []
 	parsedLine = parseString(line, True)
-	stringList = createStringList(line)
+	stringList = createStringList(parsedLine)
 	return render_template('/student/student-view.html', rows=stringList)
 
 @app.route('/student-view/filter', methods=["GET", "POST"])
@@ -260,7 +260,7 @@ def recruiterView():
 	# 	'firstName': request.form['first'],
 	# 	'lastName' : request.form['last'],
 	# 	'email' : request.form['email'],
-	# 	'id' : request.form['id'],
+	# 	'id' : request.form['id']
 	# 	'password' : request.form['pwd'],
 	# 	'company': request.form['company']
 	# }
@@ -268,16 +268,29 @@ def recruiterView():
 	# query = execute_query("""insert into Recruiter(recruiter_ID, company_ID) values (%s,%s)""", [recruiter['id'], recruiter['company']]);	
 
 	### PUT SQL QUERIES HERE ###
-	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
-	 u.name, s.GPA 
+	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,u.name, s.GPA 
 	FROM People p JOIN Student s ON s.student_ID = p.ID 
 	JOIN Major m ON s.major_ID = m.major_ID
 	JOIN University u ON u.university_ID = s.university_ID; """)
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, False)
-	stringList = createStringList(parsedLine)
-	return render_template('/recruiter/recruiter-view.html', rows=stringList)
+
+
+	# for tup in query:
+	# 	query = [item.encode('ascii','backslashreplace') for item in tup]
+	# print query
+
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+
+	#line = str(query) # Convert the tuple to a string
+	#print line
+	#stringList = []
+	#parsedLine = parseString(line, False)
+	#stringList = createStringList(parsedLine)
+	return render_template('/recruiter/recruiter-view.html', rows=newlist)
 
 @app.route('/recruiter-view/filter', methods = ['POST', 'GET'])
 def filterStudents():
