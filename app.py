@@ -110,7 +110,7 @@ def studentView():
 	stringList = []
 	parsedLine = parseString(line, True)
 	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	return render_template('/student/student-view.html', rows=query)
 
 @app.route('/recruiter-view', methods = ['POST', 'GET'])
 def recruiterView():
@@ -124,7 +124,26 @@ def recruiterView():
 	stringList = []
 	parsedLine = parseString(line, False)
 	stringList = createStringList(parsedLine)
-	return render_template('/recruiter/recruiter-view.html', rows=stringList)
+	return render_template('/recruiter/recruiter-view.html', rows=query)
+
+@app.route('/student-view/company/<company>', methods = ['POST', 'GET'])
+def filterRecruiterCompany(company):
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID
+	WHERE c.name = %s""", [company])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=query)
 
 @app.route('/student-view/industry/<industry>', methods = ['POST', 'GET'])
 def filterRecruiterIndustry(industry):
@@ -215,6 +234,7 @@ def parseString(line, student):
 	for c in line:
 		if c != "'" and c != "(":
 
+			# Preserve all u's except for the one's we don't want
 			if(nextU):
 				nextU = False
 				continue
