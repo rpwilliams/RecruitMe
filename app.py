@@ -2,7 +2,7 @@
 # app.py           					   #
 # Description: The main python file    #
 # to be run for "RecruitMe"            #
-# Author: Ryan Williams				   #
+# Author: Ryan Williams, Matt Hixon	   #
 # Last modified 12.4.2016              #
 ########################################
 from flask import Flask, render_template, request, jsonify, url_for, json, g
