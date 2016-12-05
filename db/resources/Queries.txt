@@ -1,0 +1,234 @@
+Queries
+
+Requirements:
+
+check	1. 1 join
+check	2. 1 nested query
+check	3. 1 aggregate (min(), max(), avg(), sum(), etc.)
+check	4. 1 group by
+check	5. 1 compound where condition (with at least a couple of sub-conditions that are different from join donditions)
+check	6. 3 reports based on more than 1 table
+	7. Commented and easy to read
+
+
+
+
+1. SELECT * FROM Student WHERE GPA = '4.0' AND grad_date = 'May 2019';
+
+2. 
+SELECT * FROM Student s join University u
+on u.university_ID = s.major_ID
+where u.name = 'Kansas State University';
+
+3.
+SELECT AVG(s.GPA) FROM Student s join University u
+on u.university_ID = s.major_ID
+where u.name = 'Kansas State University';
+
+4.
+Select p.first_name, p.last_name, p.email, m.name, u.name, s.GPA from People p
+join Student s
+on s.student_ID = p.ID
+join Major m
+on s.major_ID = m.major_ID
+join University u
+on u.university_ID = s.university_ID;
+
+5.
+
+select u.name, AVG(s.GPA) from Student s 
+join University u 
+on u.university_ID = s.major_ID
+group by u.university_ID;
+
+6.
+
+select m.name, count(s.major_ID) from Student s
+join Major m
+on m.major_ID = s.major_ID
+group by m.major_ID;
+
+7.
+select u.name, count(x.major_ID) from (
+select m.name, count(s.major_ID) as cnt from Student s
+join Major m
+on m.major_ID = s.major_ID
+group by m.major_ID) x
+join University u
+on u.university_ID = s.university_ID
+group by u.university_ID;
+
+select u.name, m.name, count(s.major_ID) from Student s
+join Major m
+on m.major_ID = s.major_ID
+join University u
+on u.university_ID = s.university_ID
+group by u.university_ID;
+
+7.
+
+select u.name, count(s.university_ID) from Student s
+join University u
+on u.university_ID = s.university_ID
+group by u.university_ID;
+
+8.
+
+select max(x.course) from
+(select course_ID, count(*) as course
+  from Student_Course
+  group by course_ID) x;
+
+9.
+
+Select p.first_name, p.last_name, p.email, m.name, u.name, s.GPA from People p
+join Student s
+on s.student_ID = p.ID
+join Major m
+on s.major_ID = m.major_ID
+join University u
+on u.university_ID = s.university_ID
+join Student_Course sc
+on sc.student_ID = s.student_ID
+join Course c
+on c.course_ID = sc.course_ID
+where c.title = 'CS500';
+
+10.
+
+Select p.first_name, p.last_name, p.email, c.name, u.name from People p
+join Student s
+on s.student_ID = p.ID
+join Student_Company sc
+on sc.student_ID = s.student_ID
+join Company c
+on c.company_ID = sc.company_ID
+join University u
+on u.university_ID = s.university_ID;
+
+11.
+
+Select c.num_of_employees, sr.high_end, AVG(s.GPA), count(sc.company_ID) from People p
+join Student s
+on s.student_ID = p.ID
+join Student_Company sc
+on sc.student_ID = s.student_ID
+join Company c
+on c.company_ID = sc.company_ID
+join Salary_Range sr
+on sr.salary_ID = c.salary_ID
+where c.name = 'Sodales Corp.';
+
+
+12.
+
+Select p.first_name, p.last_name, p.email, c.name from People p
+join Recruiter r
+on r.recruiter_ID = p.ID
+join Company c
+on c.company_ID = r.company_ID;
+
+13.
+
+select AVG(sr.high_end) from Student s
+join University u
+on u.university_ID = s.university_ID
+join Student_Company sc
+on sc.student_ID = s.student_ID
+join Company c
+on c.company_ID = sc.company_ID
+join Salary_Range sr
+on sr.salary_ID = c.salary_ID
+where u.name = 'Kansas State University';
+
+14.
+
+select p.first_name, p.last_name, p.email, c.name, i.name from People p
+join Recruiter r
+on r.recruiter_ID = p.ID
+join Company c
+on c.company_ID = r.company_ID
+join Company_Industry ci
+on ci.company_ID = c.company_ID
+join Industry i
+on i.industry_ID = ci.industry_ID
+where i.name = 'Financial Services';
+
+15.
+
+select distinct p.first_name, p.last_name, p.email, c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name from People p
+join Recruiter r
+on r.recruiter_ID = p.ID
+join Company c
+on c.company_ID = r.company_ID
+join Company_Industry ci
+on ci.company_ID = c.company_ID
+join Industry i
+on i.industry_ID = ci.industry_ID
+join Salary_Range sr
+on sr.salary_ID = c.salary_ID
+join Company_Majors cm
+on cm.company_ID = c.company_ID
+join Major m
+on m.major_ID = cm.major_ID;
+
+16.
+
+CREATE FUNCTION fn_gpa 
+  	(s_gpa varchar(50)) RETURNS varchar(50) 
+BEGIN 
+DECLARE s_rating varchar(50); 
+
+SET s_rating = 'Average'; 
+
+IF s_gpa > '3.0' THEN 
+   SET s_rating='Above Average'; 
+END IF; 
+IF s_gpa < '2.0' THEN  
+   SET s_rating='Below Average'; 
+END IF;
+
+RETURN s_rating;
+
+END
+
+SELECT fn_gpa('3.5');
+
+17.
+
+CREATE FUNCTION fn_payscale 
+  	(c_pay varchar(50)) RETURNS varchar(50) 
+BEGIN 
+DECLARE s_opinion varchar(50); 
+
+SET s_opinion = 'Normal Salary'; 
+
+IF c_pay > '5000' THEN 
+   SET s_opinion='Great Salary'; 
+END IF; 
+IF c_pay < '2000' THEN
+   SET s_opinion='Bad Salary'; 
+END IF;
+
+RETURN s_opinion;
+
+END
+
+SELECT fn_payscale('6000');
+
+
+18.
+select *
+from
+(select p.first_name, p.last_name, count(sc.student_ID) as cnt from People p
+join Student_Course sc
+on sc.student_ID = p.ID
+group by sc.student_ID) x
+where cnt > 3;
+
+
+
+
+
+
+

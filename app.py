@@ -36,6 +36,7 @@ def execute_query(query, args=()):
 	cursor = conn.cursor()
 	cursor.execute(query, args)
 	rows = cursor.fetchall()
+	conn.commit()
 	cursor.close()
 	return rows
 
@@ -81,7 +82,7 @@ def student():
 
 # @app.route('/students', methods=['POST'])
 # def createStudents():
-#     student = {
+# 	student = {
 #         'firstName': request.form['first'],
 # 		'lastName' : request.form['last'],
 # 		'email' : request.form['email'],
@@ -90,11 +91,25 @@ def student():
 # 		'GPA' : request.form['GPA'],
 # 		'major' : request.form['major']
 #     }
-#     students.append(student)
+#     query = execute_query("""insert into People(first_name, last_name, email, student_ID) values (%s,%s,%s,%s)""", [request.form['first'], request.form['last'], request.form['email'], request.form['id']]);
 #     return jsonify({'student': student}), 201
 
 @app.route('/student-view', methods = ['POST', 'GET'])
 def studentView():
+	student = {
+		'firstName': request.form['first'],
+		'lastName' : request.form['last'],
+		'email' : request.form['email'],
+		'password' : request.form['pwd'],
+		'studentID' : request.form['id'],
+		'GPA' : request.form['GPA'],
+		'major' : request.form['major'],
+		'university': request.form['university']
+	}
+	query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [student['firstName'], student['lastName'], student['email'], student['studentID']]);	
+	query = execute_query("""insert into Student(student_ID, major_ID, university_ID, GPA) values (%s,%s,%s,%s)""", [student['studentID'], student['major'], student['university'], student['GPA']]);	
+
+	print student['firstName']
 	### PUT SQL QUERIES HERE ###
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
