@@ -13,7 +13,7 @@
 
 			<!-- Filter -->
 			<div class="row">
-				<div class="panel panel-default col-lg-4">
+				<div class="panel panel-default col-lg-2">
 					<div class="panel-heading">
 						<h4>
 						FILTER
@@ -89,34 +89,36 @@
 					    </form>
 					</div>
 					<div class="panel-footer">
-						<button type="button" class="btn btn-danger" onclick="deleteAccount()">DELETE ACCOUNT</button>
+						<a type="button" class="btn btn-danger" onclick="deleteAccount()" href="{{ url_for('index') }}">DELETE ACCOUNT</a>
 					</div>
 				</div>
 
 				<!-- Main header -->
-				<div class="panel panel-default col-lg-8">
+				<div class="panel panel-default col-lg-10">
 					<div class="panel-heading"><h4>FIND A RECRUITER</h4></div>
 					<div class="panel-body" style="min-height: 500px; max-height: 500px; overflow-y:scroll;">
 						<!-- Student Info Table -->
+
 						<table class = "table">
 							<thead>
-								<!--<th> First Name </th>
+								<th> First Name </th>
 								<th> Last Name </th>
 								<th> Email </th>
 								<th> Company </th>
 								<th> Industry </th>
-								<th> Pay </th>
+								<th> Pay Low (Monthly)</th>
+								<th> Pay High (Monthly)</th>
 								<th> Company Size </th>
-								<th> Interested Majors </th>-->
+								<th> Interested Majors </th>
 							</thead>
 							<tbody>
-								<tr>
-									<td>
-							        {% for value in rows %}
-							        	<p><b><li>{{ value }} </li></b></p>
-							        {% endfor %}
-							        </td>
-								</tr>
+							{% for value in rows %}
+							<tr>
+								{% for elem in value %}
+						        <td>{{ elem }}</td>
+						        {% endfor %}
+							</tr>
+							{% endfor %}
 							</tbody>
 						</table>
 					</div>

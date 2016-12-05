@@ -122,11 +122,13 @@ def studentView():
 	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
 	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
 	JOIN Major m ON m.major_ID = cm.major_ID""")
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, True)
-	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return render_template('/student/student-view.html', rows=newlist)
 
 @app.route('/student-view-login', methods = ['POST', 'GET'])
 def studentViewLogin():
@@ -141,11 +143,13 @@ def studentViewLogin():
 	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
 	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
 	JOIN Major m ON m.major_ID = cm.major_ID""")
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, True)
-	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return render_template('/student/student-view.html', rows=newlist)
 
 # @app.route('/student-view/filter', methods=["GET", "POST"])
 # def filterRecruiters():
@@ -187,11 +191,13 @@ def filterRecruiterCompany(company):
 	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
 	JOIN Major m ON m.major_ID = cm.major_ID
 	WHERE c.name = %s""", [company])
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, True)
-	stringList = createStringList(parsedLine)
-	return stringList
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return newlist
 
 @app.route('/student-view/industry/<industry>', methods = ['POST', 'GET'])
 def filterRecruiterIndustry(industry):
@@ -206,11 +212,13 @@ def filterRecruiterIndustry(industry):
 	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
 	JOIN Major m ON m.major_ID = cm.major_ID
 	WHERE i.name = %s""", [industry])
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, True)
-	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return render_template('/student/student-view.html', rows=newlist)
 	#return stringList
 
 @app.route('/student-view/salaryRange/<salaryRange>', methods = ['POST', 'GET'])
@@ -226,11 +234,13 @@ def filterRecruiterSalary(salaryRange):
 	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
 	JOIN Major m ON m.major_ID = cm.major_ID
 	WHERE sr.low_end = %s""", [salaryRange])
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, True)
-	stringList = createStringList(parsedLine)
-	return stringList
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return newlist
 
 @app.route('/student-view/numEmployees/<numEmployees>', methods = ['POST', 'GET'])
 def filterRecruiterEmployees(numEmployees):
@@ -245,11 +255,13 @@ def filterRecruiterEmployees(numEmployees):
 	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
 	JOIN Major m ON m.major_ID = cm.major_ID
 	WHERE c.num_of_employees = %s""", [numEmployees])
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, True)
-	stringList = createStringList(parsedLine)
-	return stringList
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return newlist
 
 @app.route('/student-view/major/<major>', methods = ['POST', 'GET'])
 def filterRecruiterMajor(major):
@@ -264,11 +276,13 @@ def filterRecruiterMajor(major):
 	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
 	JOIN Major m ON m.major_ID = cm.major_ID
 	WHERE m.name = %s""", [major])
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, True)
-	stringList = createStringList(parsedLine)
-	return stringList
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return newlist
 
 ##############################################
 #          RECRUITER VIEW FUNCTIONS			 #
@@ -309,28 +323,35 @@ def recruiterView():
 	#stringList = createStringList(parsedLine)
 	return render_template('/recruiter/recruiter-view.html', rows=newlist)
 
-@app.route('/recruiter-view/filter', methods = ['POST', 'GET'])
-def filterStudents():
-	major = request.form["majorradio"]
-	gpa = request.form["gparadio"]
-	college = request.form["collegeradio"]
-	query = ""
-	print company
-	if(major == "Accounting"): 
-		query = filterStudentMajor('Accounting')
-	elif(major == "Computer Science"):
-	  	query = filterStudentMajor("Computer Science")
-	elif(gpa == "2-3"):
-		query = filterStudentGPA("2.00")
-	elif(gpa == "3-4"):
-		query = filterStudentGPA("3.00")
-	elif(gpa == "4+"):
-		query = filterStudentGPA("4.00")
-	elif(college == "Kansas State University"):
-		query = filterStudentCollege("Kansas State University")
-	elif(college == "Oklahoma State University"):
-		query = filterStudentCollege("Oklahoma State University")
-	return render_template('/recruiter/recruiter-view.html', rows=query)
+# @app.route('/recruiter-view/filter', methods = ['POST', 'GET'])
+# def filterStudents():
+# 	major = request.form["majorradio"]
+# 	gpa = request.form["gparadio"]
+# 	college = request.form["collegeradio"]
+# 	query = ""
+# 	print company
+# 	if(major == "Accounting"): 
+# 		query = filterStudentMajor('Accounting')
+# 	elif(major == "Computer Science"):
+# 	  	query = filterStudentMajor("Computer Science")
+# 	elif(gpa == "2-3"):
+# 		query = filterStudentGPA("2.00")
+# 	elif(gpa == "3-4"):
+# 		query = filterStudentGPA("3.00")
+# 	elif(gpa == "4+"):
+# 		query = filterStudentGPA("4.00")
+# 	elif(college == "Kansas State University"):
+# 		query = filterStudentCollege("Kansas State University")
+# 	elif(college == "Oklahoma State University"):
+# 		query = filterStudentCollege("Oklahoma State University")
+
+# 	newlist = []
+# 	for tup in query:
+# 		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+# 		newlist.append(llist)
+
+# 	print newlist
+# 	return render_template('/recruiter/recruiter-view.html', rows=newlist)
 
 @app.route('/recruiter-view-login', methods = ['POST', 'GET'])
 def recruiterViewLogin():
@@ -340,11 +361,13 @@ def recruiterViewLogin():
 	FROM People p JOIN Student s ON s.student_ID = p.ID 
 	JOIN Major m ON s.major_ID = m.major_ID
 	JOIN University u ON u.university_ID = s.university_ID; """)
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, False)
-	stringList = createStringList(parsedLine)
-	return render_template('/recruiter/recruiter-view.html', rows=query)
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return render_template('/recruiter/recruiter-view.html', rows=newlist)
 
 # @app.route('/recruiter-view/filter', methods = ['POST', 'GET'])
 # def filterStudents():
@@ -379,10 +402,13 @@ def filterStudentMajor(major):
 	JOIN University u ON u.university_ID = s.university_ID
 	WHERE m.name = %s; """, [major])
 	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, False)
-	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return render_template('/student/student-view.html', rows=newlist)
 	#return stringList
 
 def filterStudentGPA(gpa):
@@ -393,11 +419,13 @@ def filterStudentGPA(gpa):
 	JOIN Major m ON s.major_ID = m.major_ID
 	JOIN University u ON u.university_ID = s.university_ID
 	WHERE s.GPA = %s; """, [gpa])
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, False)
-	stringList = createStringList(parsedLine)
-	return stringList
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return newlist
 
 @app.route('/recruiter-view/college/<college>', methods = ['POST', 'GET'])
 def filterStudentCollege(college):
@@ -408,11 +436,13 @@ def filterStudentCollege(college):
 	JOIN Major m ON s.major_ID = m.major_ID
 	JOIN University u ON u.university_ID = s.university_ID
 	WHERE u.name = %s; """, [college])
-	line = str(query) # Convert the tuple to a string
-	stringList = []
-	parsedLine = parseString(line, False)
-	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	newlist = []
+	for tup in query:
+		llist = ([item.encode('ascii','backslashreplace') for item in tup])
+		newlist.append(llist)
+
+	print newlist
+	return render_template('/recruiter/recruiter-view.html', rows=newlist)
 	#return stringList
 
 # @Function parseString
