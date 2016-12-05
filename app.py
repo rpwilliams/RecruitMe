@@ -125,7 +125,7 @@ def studentView():
 	stringList = []
 	parsedLine = parseString(line, True)
 	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	return render_template('/student/student-view.html', rows=query)
 
 @app.route('/recruiter-view', methods = ['POST', 'GET'])
 def recruiterView():
@@ -139,7 +139,128 @@ def recruiterView():
 	stringList = []
 	parsedLine = parseString(line, False)
 	stringList = createStringList(parsedLine)
-	return render_template('/recruiter/recruiter-view.html', rows=stringList)
+	return render_template('/recruiter/recruiter-view.html', rows=query)
+
+@app.route('/student-view/filter/', methods=["GET", "POST"])
+def filterRecruiters():
+	company = request.form['companyradio']
+	industry = request.form['industryradio']
+	pay = request.form['payradio']
+	if(company == "augue"):
+		filterRecruiterCompany("Augue Porttitor Interdum Corp.")
+	elif(company == "posuere"):
+		filterRecruiterCompany("Posuere Vulputate Lacus PC")
+	elif(company == "suspendisse"):
+		filterRecruiterCompany("Suspendisse Non LLC")
+	elif(industry == "education"):
+		filterRecruiterIndustry("Education")
+	elif(industry == "financial"):
+		filterRecruiterIndustry("Financial Services")
+	elif(industry == "utilties"):
+		filterRecruiterIndustry("Services")
+	elif(pay == "5000"):
+		filterRecruiterSalary("5000")
+	elif(pay == "6000"):
+		filterRecruiterSalary("6000")
+	elif(pay == "7000"):
+		filterRecruiterSalary("7000")
+
+
+@app.route('/student-view/filter/company/<company>', methods = ['POST', 'GET'])
+def filterRecruiterCompany(company):
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID
+	WHERE c.name = %s""", [company])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=query)
+
+@app.route('/student-view/filter/industry/<industry>', methods = ['POST', 'GET'])
+def filterRecruiterIndustry(industry):
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID
+	WHERE i.name = %s""", [industry])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
+
+@app.route('/student-view/filter/salaryRange/<salaryRange>', methods = ['POST', 'GET'])
+def filterRecruiterSalary(salaryRange):
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID
+	WHERE sr.low_end = %s""", [salaryRange])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
+
+@app.route('/student-view/filter/numEmployees/<numEmployees>', methods = ['POST', 'GET'])
+def filterRecruiterEmployees(numEmployees):
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID
+	WHERE c.num_of_employees = %s""", [numEmployees])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
+
+@app.route('/student-view/filter/major/<major>', methods = ['POST', 'GET'])
+def filterRecruiterMajor(major):
+	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
+	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
+	FROM People p
+	JOIN Recruiter r ON r.recruiter_id = p.ID
+	JOIN Company c ON c.company_ID = r.company_ID
+	JOIN Company_Industry ci ON ci.company_ID = c.company_ID
+	JOIN Industry i ON i.industry_ID = ci.industry_ID
+	JOIN Salary_Range sr ON sr.salary_ID = c.salary_ID
+	JOIN Company_Majors cm ON cm.company_ID = c.company_ID
+	JOIN Major m ON m.major_ID = cm.major_ID
+	WHERE m.name = %s""", [major])
+	line = str(query) # Convert the tuple to a string
+	stringList = []
+	parsedLine = parseString(line, True)
+	stringList = createStringList(parsedLine)
+	return render_template('/student/student-view.html', rows=stringList)
+
 
 # @Function parseString
 # Removes unwanted symbols from the string
@@ -148,9 +269,19 @@ def recruiterView():
 # @Return String without characters and | characters
 def parseString(line, student):
 	count = 0
-	newWord = "";
+	newWord = ""
+	nextU = False
 	for c in line:
-		if c != "'" and c != "u" and c != "(":
+		if c != "'" and c != "(":
+
+			# Preserve all u's except for the one's we don't want
+			if(nextU):
+				nextU = False
+				continue
+			if(c == " " or c == "("):
+				nextU = True
+
+			# Ensure we get rid of the u's before the words
 			# Concatonate the string 
 			if c != ",":
 				newWord += c

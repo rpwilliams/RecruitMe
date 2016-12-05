@@ -1,6 +1,0 @@
-Recruiting 
-	- Extra feauture: Add companies that already exist
-	- Add salary range
-		- High end low end of salary (dropdown box with range)
-	- Make majors a textbox
-	- Seperate screen for ID?
