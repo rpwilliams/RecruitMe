@@ -108,8 +108,6 @@ def studentView():
 	}
 	query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [student['firstName'], student['lastName'], student['email'], student['studentID']]);	
 	query = execute_query("""insert into Student(student_ID, major_ID, university_ID, GPA) values (%s,%s,%s,%s)""", [student['studentID'], student['major'], student['university'], student['GPA']]);	
-
-	print student['firstName']
 	### PUT SQL QUERIES HERE ###
 	query = execute_query("""SELECT distinct p.first_name, p.last_name, p.email,
 	c.name, i.name, sr.low_end, sr.high_end, c.num_of_employees, m.name
@@ -129,6 +127,17 @@ def studentView():
 
 @app.route('/recruiter-view', methods = ['POST', 'GET'])
 def recruiterView():
+	recruiter = {
+		'firstName': request.form['first'],
+		'lastName' : request.form['last'],
+		'email' : request.form['email'],
+		'id' : request.form['id'],
+		'password' : request.form['pwd'],
+		'company': request.form['company']
+	}
+	query = execute_query("""insert into People(first_name, last_name, email, ID) values (%s,%s,%s,%s)""", [recruiter['firstName'], recruiter['lastName'], recruiter['email'], recruiter['id']]);	
+	query = execute_query("""insert into Recruiter(recruiter_ID, company_ID) values (%s,%s)""", [recruiter['id'], recruiter['company']]);	
+
 	### PUT SQL QUERIES HERE ###
 	query = execute_query("""SELECT p.first_name, p.last_name, p.email, m.name,
 	 u.name, s.GPA 
