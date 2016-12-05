@@ -109,7 +109,7 @@ def studentView():
 	line = str(query) # Convert the tuple to a string
 	stringList = []
 	parsedLine = parseString(line, True)
-	stringList = createStringList(parsedLine)
+	stringList = createStringList(line)
 	return render_template('/student/student-view.html', rows=query)
 
 @app.route('/recruiter-view', methods = ['POST', 'GET'])
@@ -123,32 +123,36 @@ def recruiterView():
 	line = str(query) # Convert the tuple to a string
 	stringList = []
 	parsedLine = parseString(line, False)
-	stringList = createStringList(parsedLine)
-	return render_template('/recruiter/recruiter-view.html', rows=query)
+	#stringList = createStringList(parsedLine)
+	stringList = createStringList(line)
+	return render_template('/recruiter/recruiter-view.html', rows=stringList)
 
-@app.route('/student-view/filter/', methods=["GET", "POST"])
+@app.route('/student-view/filter', methods=["GET", "POST"])
 def filterRecruiters():
-	company = request.form['companyradio']
-	industry = request.form['industryradio']
-	pay = request.form['payradio']
+	company = request.form["companyradio"]
+	#industry = request.form.get("industryradio")
+	# pay = request.form["payradio"]
+	query = ""
+	print company
 	if(company == "augue"):
-		filterRecruiterCompany("Augue Porttitor Interdum Corp.")
+		query = filterRecruiterCompany("Augue Porttitor Interdum Corp.")
 	elif(company == "posuere"):
-		filterRecruiterCompany("Posuere Vulputate Lacus PC")
+	  	query = filterRecruiterCompany("Posuere Vulputate Lacus PC")
 	elif(company == "suspendisse"):
-		filterRecruiterCompany("Suspendisse Non LLC")
-	elif(industry == "education"):
-		filterRecruiterIndustry("Education")
-	elif(industry == "financial"):
-		filterRecruiterIndustry("Financial Services")
-	elif(industry == "utilties"):
-		filterRecruiterIndustry("Services")
-	elif(pay == "5000"):
-		filterRecruiterSalary("5000")
-	elif(pay == "6000"):
-		filterRecruiterSalary("6000")
-	elif(pay == "7000"):
-		filterRecruiterSalary("7000")
+		query = filterRecruiterCompany("Suspendisse Non LLC")
+	# elif(industry == "education"):
+	# 	query = filterRecruiterIndustry("Education")
+	# elif(industry == "financial"):
+	# 	query = filterRecruiterIndustry("Financial Services")
+	# elif(industry == "utilties"):
+	# 	query = filterRecruiterIndustry("Services")
+	# elif(pay == "5000"):
+	# 	query = filterRecruiterSalary("5000")
+	# elif(pay == "6000"):
+	# 	query = filterRecruiterSalary("6000")
+	# elif(pay == "7000"):
+	# 	query = filterRecruiterSalary("7000")
+	return render_template('/student/student-view.html', rows=query)
 
 
 @app.route('/student-view/filter/company/<company>', methods = ['POST', 'GET'])
@@ -168,7 +172,7 @@ def filterRecruiterCompany(company):
 	stringList = []
 	parsedLine = parseString(line, True)
 	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=query)
+	return stringList
 
 @app.route('/student-view/filter/industry/<industry>', methods = ['POST', 'GET'])
 def filterRecruiterIndustry(industry):
@@ -187,7 +191,7 @@ def filterRecruiterIndustry(industry):
 	stringList = []
 	parsedLine = parseString(line, True)
 	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	return stringList
 
 @app.route('/student-view/filter/salaryRange/<salaryRange>', methods = ['POST', 'GET'])
 def filterRecruiterSalary(salaryRange):
@@ -206,7 +210,7 @@ def filterRecruiterSalary(salaryRange):
 	stringList = []
 	parsedLine = parseString(line, True)
 	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	return stringList
 
 @app.route('/student-view/filter/numEmployees/<numEmployees>', methods = ['POST', 'GET'])
 def filterRecruiterEmployees(numEmployees):
@@ -225,7 +229,7 @@ def filterRecruiterEmployees(numEmployees):
 	stringList = []
 	parsedLine = parseString(line, True)
 	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	return stringList
 
 @app.route('/student-view/filter/major/<major>', methods = ['POST', 'GET'])
 def filterRecruiterMajor(major):
@@ -244,7 +248,7 @@ def filterRecruiterMajor(major):
 	stringList = []
 	parsedLine = parseString(line, True)
 	stringList = createStringList(parsedLine)
-	return render_template('/student/student-view.html', rows=stringList)
+	return stringList
 
 
 # @Function parseString
